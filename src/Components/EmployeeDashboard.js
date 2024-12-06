@@ -6,7 +6,7 @@ import Availability from './Availability .jsx';
 import TimeOffRequest from './TimeOffRequest.jsx';
 const EmployeeDashboard = () => {
   const [employeeData, setEmployeeData] = useState(null);
-  const [selectedFeature, setSelectedFeature] = useState('tasks'); // Default feature
+  const [selectedFeature, setSelectedFeature] = useState('availability'); // Default feature
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Sidebar toggle state
   const navigate = useNavigate();
 
@@ -31,19 +31,7 @@ const EmployeeDashboard = () => {
 
   const renderFeature = () => {
     switch (selectedFeature) {
-      case 'tasks':
-        return (
-          <div>
-            <h2>Your Tasks</h2>
-            <ul>
-              {employeeData?.tasks?.length > 0 ? (
-                employeeData.tasks.map((task) => <li key={task.id}>{task.name}</li>)
-              ) : (
-                <p>No tasks assigned.</p>
-              )}
-            </ul>
-          </div>
-        );
+     
       case 'availability':
         return (
          <Availability/>
@@ -62,26 +50,21 @@ const EmployeeDashboard = () => {
     <div className="d-flex">
       {/* Sidebar */}
       <div
-        className={`bg-light border-end vh-100 ${isSidebarOpen ? 'd-block' : 'd-none'}`}
+        className={`bg-dark border-end vh-100 ${isSidebarOpen ? 'd-block' : 'd-none'}`}
         style={{ width: '250px' }}
       >
-        <div className="p-3">
+        <div className="p-3 bg-dark">
           <h4>Menu</h4>
           <ul className="list-group">
+            
             <li
-              className={`list-group-item ${selectedFeature === 'tasks' ? 'active' : ''}`}
-              onClick={() => setSelectedFeature('tasks')}
-            >
-              Tasks
-            </li>
-            <li
-              className={`list-group-item ${selectedFeature === 'availability' ? 'active' : ''}`}
+              className={`list-group-item ${selectedFeature === 'availability' ?  'white text-black' : 'bg-dark text-white'}`}
               onClick={() => setSelectedFeature('availability')}
             >
               Availability
             </li>
             <li
-              className={`list-group-item ${selectedFeature === 'tor' ? 'active' : ''}`}
+              className={`list-group-item ${selectedFeature === 'tor' ?  'white text-black' : 'bg-dark text-white'}`}
               onClick={() => setSelectedFeature('tor')}
             >
               Time Off Requests
@@ -93,14 +76,15 @@ const EmployeeDashboard = () => {
       {/* Main Content */}
       <div className="flex-grow-1">
         {/* Header */}
-        <header className="d-flex justify-content-between align-items-center p-3 bg-primary text-white">
+        <header className="d-flex justify-content-between align-items-center p-3 bg-dark text-white">
           <button
             className="btn btn-light btn-sm"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           >
             ☰
           </button>
-          <h1 className="m-0">Employee Dashboard</h1>
+          <h2 className="m-0">Employee Dashboard</h2>
+           {employeeData &&  ( <h4>Welcome, {employeeData.firstName}!!</h4>)}
           <Logout />
         </header>
 
@@ -108,7 +92,6 @@ const EmployeeDashboard = () => {
         <main className="p-4">
           {employeeData ? (
             <>
-              <p>Welcome, {employeeData.firstName}!</p>
               {renderFeature()}
             </>
           ) : (

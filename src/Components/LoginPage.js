@@ -11,70 +11,95 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Create a URLSearchParams object to encode form data
     const formData = new URLSearchParams();
-    formData.append('email', email);  // Send 'email' as the key
-    formData.append('password', password);  // Send 'password' as the key
+    formData.append('email', email);
+    formData.append('password', password);
 
     try {
-      // Send POST request with form data (application/x-www-form-urlencoded)
       const response = await axios.post('http://localhost:5001/api/Employee/Login', formData, {
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded', // Set the correct content type
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
       });
-console.log('Raw response data:', response.data);
 
-    // Now destructure and log each property
-    const { message, userID, firstName, roleID } = response.data;
+      const { message, userID, firstName, roleID } = response.data;
 
-    // Log each value
-    console.log('Message:', message);  // Login successful
-    console.log('UserID:', userID);    // 5
-    console.log('FirstName:', firstName); // caroline
-    console.log('RoleID:', roleID);  // 1
+      console.log('Message:', message);
+      console.log('UserID:', userID);
+      console.log('FirstName:', firstName);
+      console.log('RoleID:', roleID);
 
-    // Store user info in localStorage (or Context API / Redux for state management)
-    localStorage.setItem('UserID', userID);
-    localStorage.setItem('FirstName', firstName);
-    localStorage.setItem('RoleID', roleID);
+      localStorage.setItem('UserID', userID);
+      localStorage.setItem('FirstName', firstName);
+      localStorage.setItem('RoleID', roleID);
 
-    // Redirect user to respective dashboard based on their role
-    if (roleID === 1) {
-      navigate('/admin-dashboard');
-    } else {
-      navigate('/employee-dashboard');
+      if (roleID === 1) {
+        navigate('/admin-dashboard');
+      } else {
+        navigate('/employee-dashboard');
+      }
+    } catch (error) {
+      setErrorMessage(error.response?.data?.message || 'Something went wrong!');
     }
+  };
 
-  } catch (error) {
-    setErrorMessage(error.response?.data?.message || 'Something went wrong!');
-  }
-};
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-        {errorMessage && <div>{errorMessage}</div>}
-      </form>
+    <div
+      className="d-flex justify-content-center align-items-center vh-100"
+      style={{
+        backgroundImage: `url('https://d6xcmfyh68wv8.cloudfront.net/learn-content/uploads/2023/11/Employee-Management-System-770x515.png')`,
+        backgroundSize:  '1600px 950px', // Make the image cover the full screen
+        backgroundPosition: 'center', // Center the image
+        backgroundRepeat: 'no-repeat', // Prevent repetition of the image
+        height: '50vh', // Ensure the image fills the viewport height
+      }}
+    >
+      <div
+        className="card p-4 shadow"
+        style={{
+          width: '400px',
+          background: 'rgba(255, 255, 255, 0.85)', // Semi-transparent background for card
+          borderRadius: '10px',
+        }}
+      >
+        <h2 className="text-center mb-4">Login</h2>
+        <form onSubmit={handleLogin}>
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              className="form-control"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              className="form-control"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          {errorMessage && (
+            <div className="alert alert-danger text-center" role="alert">
+              {errorMessage}
+            </div>
+          )}
+          <button type="submit" className="btn btn-primary w-100">
+            Login
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
